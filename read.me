@@ -1,0 +1,44 @@
+NAS
+smb://192.168.1.209 <-- Finder -> Go -> Connect to Server
+then use Cursor AI to open this folder
+
+
+
+
+Navigate to project directory
+cd my_streamlit_app
+
+Create a virtual environment
+python -m venv venv
+
+activate the virtuanl envirnment
+source venv/bin/activate
+source streamlit_env/bin/activate
+
+to install additional packages
+pip install package_name
+
+run
+streamlit run app.py
+
+http://localhost.8501
+
+control C to get out of the running
+
+deactivate
+to get out of virtual env
+
+pip freeze > requirements.txt
+all the dependencies are "saved" at requirements.txt
+
+
+-----
+development ideas:
+the app will parse every single sheet of the excel file
+it will then provide necessary data analysis on the sheet
+if needed it will also provide tailored analysis 
+it will also be able to provide AI Assisted conclusion here
+it will be able to connect data across sheets
+it will also allow a web app to input / edit the data on the sheet
+
+

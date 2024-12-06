@@ -1,0 +1,54 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# Page config
+st.set_page_config(page_title="Data Analysis Dashboard", layout="wide")
+
+# File uploader
+uploaded_file = st.file_uploader("Choose your Excel file", type=['xlsx', 'xls', 'csv'])
+
+if uploaded_file is not None:
+    # Read the data
+    df = pd.read_excel(uploaded_file) if uploaded_file.name.endswith(('xlsx', 'xls')) else pd.read_csv(uploaded_file)
+    
+    # Display basic info
+    st.subheader("Data Overview")
+    st.write(f"Total Records: {len(df)}")
+    st.dataframe(df.head())
+    
+    # Basic analysis
+    st.subheader("Data Analysis")
+    
+    # Select columns for analysis
+    numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
+    
+    if numeric_cols:  # Check if there are any numeric columns
+        selected_col = st.selectbox("Select column for analysis", numeric_cols)
+        
+        # Basic statistics
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Mean", round(df[selected_col].mean(), 2))
+        col2.metric("Median", round(df[selected_col].median(), 2))
+        col3.metric("Std Dev", round(df[selected_col].std(), 2))
+        
+        # Visualizations
+        st.subheader("Visualizations")
+        
+        # Histogram
+        fig_hist = px.histogram(df, x=selected_col, title=f"Distribution of {selected_col}")
+        st.plotly_chart(fig_hist)
+        
+        # Time series if date column exists
+        date_cols = df.select_dtypes(include=['datetime64']).columns.tolist()
+        if date_cols:
+            date_col = st.selectbox("Select date column", date_cols)
+            fig_time = px.line(df, x=date_col, y=selected_col, 
+                              title=f"{selected_col} over time")
+            st.plotly_chart(fig_time)
+    else:
+        st.warning("No numeric columns found in the dataset. Please upload a file with numeric data.")
+        
+    # Display all column types for debugging
+    st.subheader("Column Types")
+    st.write(df.dtypes)
